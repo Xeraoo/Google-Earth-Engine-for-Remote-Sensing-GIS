@@ -1,0 +1,30 @@
+//display global boundaries
+var fc = ee.FeatureCollection('USDOS/LSIB/2013');
+Map.setCenter(101.68, 3.14, 12); //KL city
+Map.addLayer(fc, {}, 'Boundaries');
+
+// Load a FeatureCollection from a Fusion Table.
+//Global 200 ecoregions
+var fromFT = ee.FeatureCollection('ft:11SfWB6oBS1iWGiQxEOqF_wUgBJL7Bux-pWU-mqd5');
+
+// Print and display the FeatureCollection.
+print(fromFT);
+Map.addLayer(fromFT, {}, 'From Fusion Table');
+
+// Create a FeatureCollection from a single geometry and print it.
+var fromGeom = ee.FeatureCollection(ee.Geometry.Point(103.82, 1.35));
+print(fromGeom);
+Map.addLayer(fromGeom, {}, 'fromGeom');
+
+// Define an arbitrary region 
+var region = ee.Geometry.Rectangle(107.02, 14.33, 107.5, 14.88);
+
+Map.addLayer(region, {}, 'region');
+
+
+// Create random points in the region.
+var randomPoints = ee.FeatureCollection.randomPoints(region);
+
+// Display the points.
+Map.centerObject(randomPoints);
+Map.addLayer(randomPoints, {}, 'random points');

@@ -1,0 +1,13 @@
+var pa = ee.FeatureCollection('users/minervas_jojo_code/GChaco_pa');
+//Feature collection- vector datasets 
+//https://fusiontables.google.com/data?docid=1et5l9_DRJ8oHKWPvlN95Q1xzAveLfALDjxOGfSa3#rows:id=1
+
+// Map a function over the collection to buffer each feature
+
+Map.addLayer(pa, {color: 'red'});
+
+var buffered = pa.map(function(f) {
+  return f.buffer(15000, 100); // Note that the errorMargin is set to 100.
+});
+
+Map.addLayer(buffered, {color: '800080'});

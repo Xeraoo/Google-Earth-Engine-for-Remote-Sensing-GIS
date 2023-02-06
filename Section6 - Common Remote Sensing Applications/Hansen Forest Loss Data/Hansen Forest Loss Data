@@ -1,0 +1,27 @@
+// Hansen forest loss data
+
+var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
+Map.addLayer(gfc2014);
+
+Map.addLayer(gfc2014, {bands: ['treecover2000']}, 'treecover2000');
+
+//display forest cover 0-100%
+
+Map.addLayer(gfc2014, {
+  bands: ['treecover2000'],
+  palette: ['000000', '00FF00'],
+  max: 100
+}, 'forest cover percent');
+
+//False colour composite 
+
+Map.addLayer(gfc2014, {bands: ['last_b50', 'last_b40', 'last_b30']}, 'false color');
+    
+ //add multiple bands
+
+Map.addLayer(gfc2014, {
+  bands: ['loss', 'treecover2000', 'gain'],
+  max: [1, 255, 1]
+}, 'forest cover, loss, gain');
+
+// forest loss (red), year 2000 forest cover (green) and gain (blue)

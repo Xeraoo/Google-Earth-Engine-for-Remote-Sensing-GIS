@@ -1,0 +1,19 @@
+var image = ee.Image("CGIAR/SRTM90_V4");
+
+Map.centerObject(image, 9); //zoom 9
+
+Map.setCenter(116.84,4.85,9); //latitude, longitude, zoom level
+
+Map.addLayer(image, {min: 0, max: 3000},"custom visualization");
+
+var basic = ee.Image(0);
+
+basic = basic.where(image.lt(500),1);
+// lt:  less than
+basic = basic.where(image.gte(500).and(image.lt(1000)),2);
+// gte: greater than or equal
+basic = basic.where(image.gte(1000),3);
+
+basic=basic.mask(basic);
+
+Map.addLayer(basic);

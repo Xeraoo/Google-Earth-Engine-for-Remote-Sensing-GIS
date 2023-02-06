@@ -1,0 +1,26 @@
+var image = ee.Image('LANDSAT/LC8_L1T_ANNUAL_NDVI/2014');
+
+var fc2 = ee.FeatureCollection('users/minervas_jojo_code/KHM_polygons');
+//pa in khm:https://code.earthengine.google.com/?asset=users/minervas_jojo_code/KHM_polygons
+
+Map.addLayer(fc2, {}, 'Boundaries');
+
+// Get a dictionary of means in the region.
+var means = image.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: fc2,
+  scale: 30
+});
+
+// Make a feature without geometry and set the properties to the dictionary of means.
+var feature = ee.Feature(null, means);
+
+// Wrap the Feature in a FeatureCollection for export.
+var featureCollection = ee.FeatureCollection([feature]);
+
+// Export the FeatureCollection.
+Export.table.toDrive({
+  collection: featureCollection,
+  description: 'exportTableExample',
+  fileFormat: 'CSV'
+});

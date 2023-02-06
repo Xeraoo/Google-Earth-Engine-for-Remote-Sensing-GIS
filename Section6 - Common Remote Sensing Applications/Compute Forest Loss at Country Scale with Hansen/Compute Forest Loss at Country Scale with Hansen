@@ -1,0 +1,23 @@
+// Load country boundaries from a Fusion Table.
+var countries =
+    ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
+// Get a feature collection with just the Bhutan feature.
+var b = countries.filter(ee.Filter.eq('Country', 'Bhutan'));
+
+// Get the loss image.
+var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
+var lossImage = gfc2014.select(['loss']);
+var areaImage = lossImage.multiply(ee.Image.pixelArea());
+
+// Sum the values of loss pixels in Bhutan.
+var stats = lossImage.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: b,
+  scale: 30,
+  maxPixels: 1e9
+});
+
+
+//print(stats);
+
+print('pixels representing loss: ', stats.get('loss'), 'pixels');

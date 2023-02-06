@@ -1,0 +1,11 @@
+//display shapefile PA data
+var fc = ee.FeatureCollection('users/tymoteuszmaj00/SHP_Udemy');
+Map.setCenter(101.68, 3.14, 12); //KL city
+Map.addLayer(fc, {}, 'Boundaries');
+
+// convert shapefile to google fusion table
+//http://shpescape.com/
+
+var fc2 = ee.FeatureCollection('ft:1eWrMs3TnMsqE-uQ1YFVDgCG2DHeuGH8N1iW6DNTZ');
+Map.setCenter(101.68, 3.14, 12); //KL city
+Map.addLayer(fc2, {}, 'Boundaries');

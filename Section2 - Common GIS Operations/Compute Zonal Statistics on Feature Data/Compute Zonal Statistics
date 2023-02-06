@@ -1,0 +1,21 @@
+// Load a collection of Malaysian PA.
+var pas = ee.FeatureCollection('users/minervas_jojo_code/MYS1');
+//https://code.earthengine.google.com/?asset=users/minervas_jojo_code/MYS1
+
+Map.addLayer(pas, {color: 'red'});
+
+// Compute sums of the specified properties, grouped by category name.
+var sums = pas
+  .filter(ee.Filter.and(
+    ee.Filter.neq('REP_AREA', null),
+    ee.Filter.neq('GIS_AREA', null)))
+  .reduceColumns({
+    selectors: ['REP_AREA', 'GIS_AREA', 'IUCN_CAT'],
+    reducer: ee.Reducer.mean().repeat(2).group({
+      groupField: 2,
+      groupName: 'iucn',
+    })
+});
+
+// Print the resultant Dictionary.
+print(sums);

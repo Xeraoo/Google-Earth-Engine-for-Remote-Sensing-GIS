@@ -1,0 +1,44 @@
+// Load country boundaries from a Fusion Table.
+var countries =
+    ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
+// Get a feature collection with just the Cameroon feature.
+var c = countries.filter(ee.Filter.eq('Country', 'Cameroon'));
+
+// Load the oil palm concessions from a Fusion Table.
+var oilPalm = ee.FeatureCollection('ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw', 'geometry');
+
+// Load the fiber concessions from a Fusion Table.
+var fiber = ee.FeatureCollection('ft:1uqBi75K8AtJa3q4C-DuKUPYRMGvFHtp0c7E-VTA', 'geometry');
+
+// Create a feature collection that is just oil palm and fiber
+// concessions inside Cameroon.
+var oilPalmInC = oilPalm.filterBounds(c);
+var fiberInC = fiber.filterBounds(c);
+var combined = oilPalmInC.merge(fiberInC);
+
+// Get the loss image.
+var gfc2014 = ee.Image('UMD/hansen/global_forest_change_2015');
+
+//loss in 2011
+var lossIn2011 = gfc2014.select(['lossyear']).eq(11);
+var areaImage = lossIn2011.multiply(ee.Image.pixelArea());
+
+// Calculate the area of loss pixels in Cameroon in 2011
+var stats = areaImage.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: c,
+  scale: 30,
+  maxPixels: 1e9
+});
+print(
+    'area lost in the Cameroon: ', stats.get('lossyear'),
+    ' square meters');
+
+// Calculate the area of loss pixels in the concessions.
+var stats = areaImage.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: combined,
+  scale: 30,
+  maxPixels: 1e9
+});
+print('area lost in concessions: ', stats.get('lossyear'), ' square meters');

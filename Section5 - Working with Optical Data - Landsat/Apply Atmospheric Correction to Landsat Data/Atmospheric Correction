@@ -1,0 +1,28 @@
+var l8 = ee.ImageCollection('LANDSAT/LC08/C01/T1');
+
+var region = ee.FeatureCollection('ft:15qXGJEdekv3n22kT9_U1OIjX3NZz7XJSaOLdTx6r');
+
+//var spatialFiltered = l8.filterBounds(point1);
+
+var spatialFiltered = l8.filterBounds(region);
+print('spatialFiltered', spatialFiltered);
+
+var temporalFiltered = spatialFiltered.filterDate('2017-01-01', '2017-10-31');
+print('temporalFiltered', temporalFiltered);
+
+// This will sort from least to most cloudy.
+var sorted = temporalFiltered.sort('CLOUD_COVER');
+
+// Get the first (least cloudy) image.
+var scene = ee.Image(sorted.first());
+
+Map.addLayer(scene, {bands: ['B4', 'B3', 'B2'], min: 6000, max: 12000}, 'scene');
+
+// Convert the raw data to radiance.
+var radiance = ee.Algorithms.Landsat.calibratedRadiance(scene);
+Map.addLayer(radiance, {bands: ['B4', 'B3', 'B2'], max: 90}, 'radiance');
+
+// Convert the raw data to top-of-atmosphere reflectance.
+var toa = ee.Algorithms.Landsat.TOA(scene);
+
+Map.addLayer(toa, {bands: ['B4', 'B3', 'B2'], max: 0.2}, 'toa reflectance');

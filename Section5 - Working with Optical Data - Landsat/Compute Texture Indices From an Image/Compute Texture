@@ -1,0 +1,22 @@
+// Load a high-resolution NAIP image.
+var image = ee.Image('USDA/NAIP/DOQQ/m_3712213_sw_10_1_20140613');
+
+//Map.addLayer(image);
+
+// Zoom to San Francisco, display.
+Map.setCenter(-122.466123, 37.769833, 17);
+Map.addLayer(image, {max: 255}, 'image');
+
+// Get the NIR band.
+var nir = image.select('N');
+
+// Define a neighborhood with a kernel.
+var square = ee.Kernel.square({radius: 4}); 
+//texture computed over 4 x 4 
+
+// Compute entropy and display.
+var entropy = nir.entropy(square);
+Map.addLayer(entropy,
+             {min: 1, max: 5, palette: ['0000CC', 'CC0000']},
+            'entropy');
+    

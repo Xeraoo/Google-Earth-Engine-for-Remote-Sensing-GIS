@@ -1,0 +1,29 @@
+// Load a Landsat TOA image.
+//2010 NDVI
+var n2010a = ee.Image('LANDSAT/LT5_L1T_ANNUAL_NDVI/2010');
+
+var fc = ee.FeatureCollection([ee.Feature(geometry)])
+//var fc = ee.FeatureCollection('ft:1pJ01n-4AWb1oJ4tDUGHarwieSwx7S6Q_DuNdu726');
+// lines: 1gN312M7rNdkKzmBvcy5Vhs9h5gtHP-WBXZAjyaFe
+// 
+
+var roi = n2010a.clip(fc);
+
+// Reduce the region. The region parameter is the Feature geometry.
+var meanDictionary = roi.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: fc.geometry(),
+  scale: 30,
+  maxPixels: 2142310760
+});
+
+Map.addLayer(roi);
+
+// Export the image, specifying scale and region.
+Export.image.toDrive({
+  image: roi,
+ description: 'ndvi2',
+  scale: 30,
+  region: fc
+ 
+});

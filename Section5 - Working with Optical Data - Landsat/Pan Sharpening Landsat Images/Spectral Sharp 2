@@ -1,0 +1,28 @@
+// Band combinations
+var natural = ['B4', 'B3', 'B2'];
+var swir = ['B6', 'B5', 'B3'];
+var urban = ['B7', 'B6', 'B4'];
+var veg = ['B5', 'B4', 'B3'];
+
+// Get a Landsat scene
+var scene = ee.Image('LANDSAT/LC8_L1T_TOA/LC80450332015263LGN00');
+
+// Convert the RGB bands to the HSV
+var hsv = scene.select(urban).rgbToHsv();
+
+// Add band 8 and convert back to RGB
+var sharpened = ee.Image.cat([
+  hsv.select('hue'), hsv.select('saturation'), scene.select('B8')
+]).hsvToRgb();
+
+// Do a very basic color correction 
+var imageRGB = sharpened.visualize({min: 0, max:0.18,
+              gamma:[
+                1.05, // red
+                1.08, // green
+                0.8]  // blue
+});
+
+// Display the image and zoom to it
+Map.addLayer(imageRGB);
+Map.centerObject(sharpened, 9);

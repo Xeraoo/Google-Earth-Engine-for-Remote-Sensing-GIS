@@ -1,0 +1,23 @@
+// Load a Japan boundary from a Fusion Table.
+var japan = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+  .filter(ee.Filter.eq('Country', 'Japan'));
+  
+Map.addLayer(japan, {}, 'Japan From Fusion Table');  
+
+////////////////////////////////////////////////////
+
+// Load ecoregions from a Fusion Table.
+var eco = ee.FeatureCollection('ft:1Ec8IWsP8asxN-ywSqgXWMuBaxI6pPaeh6hC64lA');
+
+// Filter the table geographically
+var af=eco.filter(ee.Filter.eq('G200_REGIO','Atlantic Forests'));
+
+Map.addLayer(af, {}, 'Atlantic Forests'); 
+
+// Filter by size
+
+// Filter to get only larger ecoregions
+var largeEco = eco.filter(ee.Filter.gt('area_km2', 240000));
+
+// Check the number of after filtering for size and location.
+print('Count after filtering by size:', largeEco.size());

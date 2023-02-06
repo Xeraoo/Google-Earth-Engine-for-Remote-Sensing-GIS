@@ -1,0 +1,12 @@
+//Create a Google fusion table
+// https://fusiontables.google.com/data?dsrcid=implicit
+
+var image = ee.Image("CGIAR/SRTM90_V4");
+var counties = ee.FeatureCollection('ft:1et5l9_DRJ8oHKWPvlN95Q1xzAveLfALDjxOGfSa3');
+//Feature collection- vector datasets 
+//https://fusiontables.google.com/data?docid=1et5l9_DRJ8oHKWPvlN95Q1xzAveLfALDjxOGfSa3#rows:id=1
+
+Map.centerObject(image, 9); //zoom 9
+
+Map.addLayer(image,{min: 0, max: 3000, palette: ['blue','green','red']},'custom palette'); 
+Map.addLayer(counties, {}, 'counties');

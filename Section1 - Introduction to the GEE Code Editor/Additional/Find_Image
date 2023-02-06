@@ -1,0 +1,14 @@
+//https://earthexplorer.usgs.gov/
+
+//var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318');
+//Map.addLayer(image, {bands: ['B4', 'B3', 'B2'], min: 6000, max: 12000}, 'scene');
+
+//var scene = ee.Image('LANDSAT/LC08/C01/T1/LC08_044034_20140318').select('B7');
+//Map.addLayer(scene, {max: 12000});
+
+var image = ee.Image('LANDSAT/LC08/C01/T1/LC08_130043_20171116');
+
+//id: LC08_Path0Row_YMD
+Map.addLayer(image, {bands: ['B4', 'B3', 'B2'], min: 6000, max: 12000}, 'scene');
+
+//https://landsat.usgs.gov/pathrow-shapefiles
